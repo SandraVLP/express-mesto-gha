@@ -1,4 +1,6 @@
 // models/user.js
+const validator = require('validator');
+
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -16,7 +18,11 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String, // гендер — это строка
-    required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
+    required: true,
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: 'Некорректный URL',
+    },
   },
 });
 

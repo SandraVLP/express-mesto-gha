@@ -18,7 +18,7 @@ module.exports.getUserById = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Пользователь по указанному _id не найден.' });
+        res.status(400).send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
         res.status(500)
           .send({ message: 'Произошла неизвестная ошибка' });
@@ -32,7 +32,9 @@ module.exports.postUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((users) => res.send({ data: users }))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
+      } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       } else {
         res.status(500)
@@ -42,7 +44,7 @@ module.exports.postUser = (req, res) => {
 };
 
 module.exports.patchUserProfile = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, req.body, { new: true })
+  User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true })
     .orFail(() => new Error('NotFound'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
