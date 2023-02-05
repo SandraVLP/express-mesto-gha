@@ -2,6 +2,7 @@ const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
 // const UnauthorizedError = require('../errors/unauthorized-err');
 const BadRequestError = require('../errors/bad-request-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -42,8 +43,9 @@ module.exports.deleteCard = async (req, res, next) => {
       .then((card) => res.status(200).send({ data: card }))
       .catch(() => next(new NotFoundError('Карточка с указанным _id не найдена.')));
   } else {
-    next(new Error());
+    next(new ForbiddenError('Нельзя удалять чужие карточки.'));
   }
+  next(new Error());
 };
 
 module.exports.putLike = (req, res, next) => {

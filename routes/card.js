@@ -11,7 +11,7 @@ const urlRegExp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-
 router.get('/', auth, getCards);
 router.delete('/:cardId', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24).hex().required(),
+    cardId: Joi.string().length(24).hex().required(),
   }),
   body: Joi.object().keys({
   }),
@@ -25,14 +25,14 @@ router.post('/', celebrate({
 }), auth, postCard);
 router.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24).hex().required(),
+    cardId: Joi.string().length(24).hex().required(),
   }),
   body: Joi.object().keys({
   }),
 }), auth, putLike);
 router.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24).hex().required(),
+    cardId: Joi.string().length(24).hex().required(),
   }),
   body: Joi.object().keys({
   }),
