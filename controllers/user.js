@@ -4,6 +4,7 @@ const User = require('../models/user');
 const UnauthorizedError = require('../errors/unauthorized-err');
 const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
+const HTPPConflictError = require('../errors/http-conflict-err');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -54,6 +55,7 @@ module.exports.createUser = (req, res, next) => {
       } else if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
       } else if (err.code === 11000) {
+        next(new HTPPConflictError('Попытка создать дубликат уникального поля.'));
         // Обработка ошибки 409
       } else {
         next(new Error());
