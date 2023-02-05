@@ -11,6 +11,9 @@ const {
   login, createUser,
 } = require('./controllers/user');
 
+// eslint-disable-next-line no-useless-escape
+const urlRegExp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -32,7 +35,7 @@ app.post('/signup', celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().uri().regex(RegExp(urlRegExp)),
     about: Joi.string().min(2).max(30),
   }),
 }), createUser);
