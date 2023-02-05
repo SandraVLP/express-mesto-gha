@@ -26,18 +26,16 @@ app.post('/signin', celebrate({
     password: Joi.string().required().min(8),
   }),
 }), login);
-app.post('/signup', createUser);
-// celebrate({
-//   // params: Joi.string().pattern(),
-//   body: Joi.object().keys({
-//     email: Joi.string().required().email(),
-//     password: Joi.string().required().min(8),
-//     name: Joi.string().min(2).max(30),
-//     avatar: Joi.string().uri(),
-//     about: Joi.string().min(2).max(30),
-//   }),
-// }),
-// createUser);
+app.post('/signup', celebrate({
+  // params: Joi.string().pattern(),
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+    name: Joi.string().min(2).max(30),
+    avatar: Joi.string().uri(),
+    about: Joi.string().min(2).max(30),
+  }),
+}), createUser);
 
 app.use(errors()); // обработчик ошибок celebrate
 app.use((err, req, res, next) => {
