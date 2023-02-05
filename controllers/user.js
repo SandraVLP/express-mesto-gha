@@ -20,7 +20,13 @@ module.exports.getUsers = (req, res, next) => {
 
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.id)
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(
+      {
+        data: {
+          name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+        },
+      },
+    ))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Пользователь по указанному _id не найден.'));
