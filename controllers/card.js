@@ -48,7 +48,7 @@ module.exports.deleteCard = async (req, res, next) => {
 
 module.exports.putLike = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-    .orFail(() => new Error('NotFound'))
+    .orFail(() => { throw new NotFoundError('Передан несуществующий _id карточки.'); })
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {

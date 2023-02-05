@@ -5,6 +5,8 @@ const auth = require('../middlewares/auth');
 const {
   getCards, postCard, deleteCard, putLike, deleteLike,
 } = require('../controllers/card');
+// eslint-disable-next-line no-useless-escape
+const urlRegExp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
 
 router.get('/', auth, getCards);
 router.delete('/:cardId', celebrate({
@@ -17,8 +19,8 @@ router.delete('/:cardId', celebrate({
 router.post('/', celebrate({
   // params: Joi.string().pattern(),
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    link: Joi.string().uri(),
+    name: Joi.string().min(2).max(30).required(),
+    link: Joi.string().required().regex(RegExp(urlRegExp)),
   }),
 }), auth, postCard);
 router.put('/:cardId/likes', celebrate({
