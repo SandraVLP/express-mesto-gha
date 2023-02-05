@@ -23,14 +23,12 @@ app.use('/users', require('./routes/user'));
 app.use('/cards', require('./routes/card'));
 
 app.post('/signin', celebrate({
-  // params: Joi.string().pattern(),
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
 }), login);
 app.post('/signup', celebrate({
-  // params: Joi.string().pattern(),
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),

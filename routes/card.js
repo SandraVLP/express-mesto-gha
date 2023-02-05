@@ -21,8 +21,20 @@ router.post('/', celebrate({
     link: Joi.string().uri(),
   }),
 }), auth, postCard);
-router.put('/:cardId/likes', auth, putLike);
-router.delete('/:cardId/likes', auth, deleteLike);
+router.put('/:cardId/likes', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().length(24).hex().required(),
+  }),
+  body: Joi.object().keys({
+  }),
+}), auth, putLike);
+router.delete('/:cardId/likes', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().length(24).hex().required(),
+  }),
+  body: Joi.object().keys({
+  }),
+}), auth, deleteLike);
 
 router.use((req, res) => {
   res.status(404).send({ message: 'Страница по указанному маршруту не найдена' });
