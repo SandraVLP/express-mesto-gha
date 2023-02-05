@@ -37,9 +37,7 @@ module.exports.deleteCard = async (req, res, next) => {
   const cardToDelete = await Card.findOne({ _id: req.params.cardId });
   const currentUserId = req.user._id;
   if (cardToDelete == null) {
-    console.log('currentUserId', currentUserId);
-    console.log('cardToDelete', cardToDelete);
-    throw new NotFoundError('Передан несуществующий _id карточки.');
+    next(new NotFoundError('Передан несуществующий _id карточки.'));
   } else if (currentUserId === cardToDelete.owner.toString()) {
     Card.findByIdAndDelete(req.params.cardId)
       .then((card) => res.status(200).send({ data: card }))
@@ -47,7 +45,6 @@ module.exports.deleteCard = async (req, res, next) => {
   } else {
     next(new ForbiddenError('Нельзя удалять чужие карточки.'));
   }
-  next(new Error());
 };
 
 module.exports.putLike = (req, res, next) => {
