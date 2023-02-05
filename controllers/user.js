@@ -32,15 +32,27 @@ module.exports.getUserById = (req, res, next) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Пользователь по указанному _id не найден.'));
       } else {
-        console.log('err', err);
         next(err);
       }
     });
 };
 
-module.exports.getUser = (req, res) => {
-  const { user } = req;
-  return res.send({ user });
+module.exports.getUser = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => res.status(200).send(
+      {
+        data: {
+          name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+        },
+      },
+    ))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Пользователь по указанному _id не найден.'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports.createUser = (req, res, next) => {

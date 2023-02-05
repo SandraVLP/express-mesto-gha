@@ -58,7 +58,7 @@ module.exports.putLike = (req, res, next) => {
       } else if (err.message === 'NotFound') {
         next(new NotFoundError('Передан несуществующий _id карточки.'));
       } else {
-        next(new Error());
+        next(err);
       }
     });
 };
@@ -77,7 +77,7 @@ module.exports.deleteLike = (req, res, next) => {
       } else if (err.message === 'NotFound') {
         next(new NotFoundError('Передан несуществующий _id карточки.'));
       } else {
-        next(new Error());
+        next(err);
       }
     });
 };
