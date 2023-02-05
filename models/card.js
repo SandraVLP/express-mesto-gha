@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
+const urlRegExp = '^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w.-]+)+[\\w\\-._~:/?#[\\]@!$&\'()*+,;=.]+$';
+
 const cardSchema = new mongoose.Schema({
   name: { // у пользователя есть имя — опишем требования к имени в схеме:
     type: String, // имя — это строка
@@ -10,11 +12,18 @@ const cardSchema = new mongoose.Schema({
   },
   link: {
     type: String,
-    required: true,
+    required: [true, 'Поле "link" должно быть заполнено'],
     validate: {
-      validator: (v) => validator.isURL(v),
+      validator: (v) => {
+        validator.isURL(v);
+        urlRegExp.test(v);
+      },
       message: 'Некорректный URL',
     },
+    // validate: {
+    //   validator: (v) => urlRegExp.test(v),
+    //   message: 'Поле "link" должно быть валидным url-адресом.',
+    // },
   },
   owner: {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
