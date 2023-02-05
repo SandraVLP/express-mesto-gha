@@ -6,7 +6,8 @@ const mongoose = require('mongoose');
 
 const isEmail = require('validator/lib/isEmail');
 
-const urlRegExp = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
+// eslint-disable-next-line no-useless-escape
+const urlRegExp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
 
 const userSchema = new mongoose.Schema({
   name: { // у пользователя есть имя — опишем требования к имени в схеме:
@@ -27,10 +28,7 @@ const userSchema = new mongoose.Schema({
     type: String, // гендер — это строка
     // required: true,
     validate: {
-      validator: (v) => {
-        validator.isURL(v);
-        urlRegExp.test(v);
-      },
+      validator: (v) => validator.isURL(v) && urlRegExp.test(v),
       message: 'Некорректный URL',
     },
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
