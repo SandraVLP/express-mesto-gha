@@ -10,6 +10,7 @@ const { errors } = require('celebrate');
 const {
   login, createUser,
 } = require('./controllers/user');
+const NotFoundError = require('./errors/not-found-err');
 
 // eslint-disable-next-line no-useless-escape
 const urlRegExp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
@@ -38,6 +39,9 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
+app.use((req, res, next) => {
+  next(new NotFoundError('Страница по указанному маршруту не найдена'));
+});
 app.use(errors()); // обработчик ошибок celebrate
 app.use((err, req, res, next) => {
   console.log('err', err);
@@ -52,10 +56,6 @@ app.use((err, req, res, next) => {
         : message,
     });
   next();
-});
-
-app.use((req, res) => {
-  res.status(404).send({ message: 'Страница по указанному маршруту не найдена' });
 });
 
 app.listen(PORT, () => {
